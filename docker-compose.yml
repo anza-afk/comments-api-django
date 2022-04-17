@@ -1,0 +1,34 @@
+version: '2.2'
+
+services:
+  app:
+    restart: always
+    build:
+      context: ./app
+    env_file: .env
+    cpus: 2
+    mem_limit: 512m
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+        - .:/django
+    ports:
+      - '8000:8000'
+    depends_on: 
+      comments_db:
+        condition: service_healthy
+
+  comments_db:
+    image: postgres:14-alpine
+    env_file: .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 5432:5432
+
+volumes:
+  pgdata:

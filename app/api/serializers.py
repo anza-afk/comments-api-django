@@ -2,6 +2,13 @@ from rest_framework import serializers
 from .models import Article, Comment
 from django.contrib.auth.models import User
 
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ('url', 'username', 'articles', 'comments')
+
+
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Article
@@ -12,11 +19,3 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Comment
         fields = ('content', 'created_date', 'article', 'user', 'parent')
-
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="api:user-detail")
-
-    class Meta:
-        model = User
-        fields = ('url', 'username')
