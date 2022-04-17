@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -83,16 +84,6 @@ DATABASES = {
         'PASSWORD' : os.environ.get('POSTGRES_PASSWORD'),
         'HOST' : os.environ.get('POSTGRES_HOST'),
         'PORT' : os.environ.get('POSTGRES_PORT')
-    }
-}
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydatabase',
-        'USER': 'mydatabaseuser',
-        'PASSWORD': 'mypassword',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
     }
 }
 

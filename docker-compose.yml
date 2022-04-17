@@ -9,12 +9,12 @@ services:
     cpus: 2
     mem_limit: 512m
     command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+        - .:/django
     ports:
       - '8000:8000'
-    volumes:
-      - .:/app
     depends_on: 
-      db:
+      comments_db:
         condition: service_healthy
 
   comments_db:
