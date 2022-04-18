@@ -9,11 +9,14 @@ class Article(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='articles')
 
     def __str__(self):
-        return self.content
+        return self.title
+    
+    class Meta:
+      ordering = ['-created_date']
 
 
 class Comment(models.Model):
-  content = models.TextField('Содержание', max_length = 300, default = '')
+  content = models.TextField('Content', max_length = 300, default = '')
   created_date = models.DateTimeField(auto_now_add=True)
   article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
   user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='comments')
@@ -22,7 +25,8 @@ class Comment(models.Model):
     default=None,
     blank=True, null=True,
     on_delete=models.CASCADE,
-    related_name='parent_%(class)s',
+    # related_name='parent_%(class)s',
+    related_name='child_comment',
     verbose_name='parent comment'
   )
 

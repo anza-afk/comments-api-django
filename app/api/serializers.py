@@ -8,14 +8,24 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('url', 'username', 'articles', 'comments')
 
-
-class ArticleSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Article
-        fields = ('name', 'title', 'content', 'created_date', 'user')
-
-
-class CommentSerializer(serializers.HyperlinkedModelSerializer):
+class NestedCommentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Comment
-        fields = ('content', 'created_date', 'article', 'user', 'parent')
+        fields = ['child_comment']
+
+class CommentSerializer(serializers.HyperlinkedModelSerializer):
+    child_comment = NestedCommentSerializer(many=True)
+    class Meta:
+        model = Comment
+        fields = ('url', 'content', 'created_date', 'article', 'user', 'parent', 'child_comment')
+
+
+class ArticleSerializer(serializers.HyperlinkedModelSerializer):
+    comments = CommentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Article
+        fields = ('url', 'name', 'title', 'content', 'created_date', 'user', 'comments')
+
+
+
