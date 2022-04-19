@@ -9,13 +9,31 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'username', 'articles', 'comments')
 
 
-class ArticleSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Article
-        fields = ('name', 'title', 'content', 'created_date', 'user')
-
-
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
+    user = serializers.ReadOnlyField(source='user.url')
+    article = serializers.ReadOnlyField(source='article.url')
     class Meta:
         model = Comment
-        fields = ('content', 'created_date', 'article', 'user', 'parent')
+        fields = ('url', 'content', 'created_date', 'article', 'user', 'parent', 'child_comment')
+    def to_representation(self, instance):
+        self.fields['child_comment'] = CommentSerializer(read_only=True, many=True)
+        return super(CommentSerializer, self).to_representation(instance)
+
+
+class ArticleCommentSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('url', 'user', 'content', 'created_date', 'child_comment')
+    def to_representation(self, instance):
+        self.fields['child_comment'] = ArticleCommentSerializer(read_only=True, many=True)
+        return super(ArticleCommentSerializer, self).to_representation(instance)
+
+
+class ArticleSerializer(serializers.HyperlinkedModelSerializer):
+    comments = ArticleCommentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Article
+        fields = ('url', 'name', 'title', 'content', 'created_date', 'user', 'comments')
+
+
