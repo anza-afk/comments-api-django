@@ -2,7 +2,7 @@
 ```
 cp .env.example .env
 ```
-___Put your postgres settings to .env file___
+*Put your postgres settings to .env file*
 
 
 
