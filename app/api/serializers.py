@@ -10,8 +10,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
-    user = serializers.ReadOnlyField(source='user.url')
-    article = serializers.ReadOnlyField(source='article.url')
     class Meta:
         model = Comment
         fields = ('url', 'content', 'created_date', 'article', 'user', 'parent', 'child_comment')
