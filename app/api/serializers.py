@@ -3,13 +3,13 @@ from .models import Article, Comment
 from django.contrib.auth.models import User
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('url', 'username', 'articles', 'comments')
 
 
-class CommentSerializer(serializers.HyperlinkedModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('url', 'content', 'created_date', 'article', 'user', 'parent', 'child_comment')
@@ -18,7 +18,7 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
         return super(CommentSerializer, self).to_representation(instance)
 
 
-class ArticleCommentSerializer(serializers.HyperlinkedModelSerializer):
+class ArticleCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('url', 'user', 'content', 'created_date', 'child_comment')
@@ -27,7 +27,7 @@ class ArticleCommentSerializer(serializers.HyperlinkedModelSerializer):
         return super(ArticleCommentSerializer, self).to_representation(instance)
 
 
-class ArticleSerializer(serializers.HyperlinkedModelSerializer):
+class ArticleSerializer(serializers.ModelSerializer):
     comments = ArticleCommentSerializer(many=True, read_only=True)
 
     class Meta:
